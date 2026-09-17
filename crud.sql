@@ -5,6 +5,8 @@ INSERT INTO location (location_id, city, country) VALUES (99, 'Utrecht', 'NL');
 INSERT INTO data_center (dc_id, dc_name, capacity_mw, status, company_id, location_id)
 VALUES (99, 'UTR-DEMO1', 55.00, 'planned', 99, 99);
 
+SELECT * FROM data_centre_impact;
+
 UPDATE data_center SET status = 'operational' WHERE dc_id = 99;
 
 DELETE FROM data_center WHERE dc_id = 99;
