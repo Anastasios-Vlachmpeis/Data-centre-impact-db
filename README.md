@@ -50,4 +50,4 @@ In MySQL Workbench: open each file with **File → Open SQL Script** and execute
 
 ## Contributors
 
-Anastasios Vlachmpeis
+Anastasios Vlachmpeis Nikita Kirillov
