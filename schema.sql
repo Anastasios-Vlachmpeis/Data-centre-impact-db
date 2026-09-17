@@ -1,14 +1,17 @@
+CREATE DATABASE data_centre_impact;
+USE data_centre_impact;
+
 CREATE TABLE company (
     company_id INT AUTO_INCREMENT PRIMARY KEY,
     company_name VARCHAR(100) NOT NULL UNIQUE
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE location (
     location_id INT AUTO_INCREMENT PRIMARY KEY,
     city VARCHAR(100) NOT NULL,
     country CHAR(2) NOT NULL,
     UNIQUE (city, country)
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE data_center (
     dc_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -31,8 +34,8 @@ CREATE TABLE environmental_impact (
     co2_tons NUMERIC(12,2) NOT NULL CHECK (co2_tons >= 0),
     UNIQUE (dc_id, year),
     CONSTRAINT fk_env_dc
-    FOREIGN KEY (dc_id) REFERENCES data_center(dc_id) ON DELETE CASCADE,
-);
+    FOREIGN KEY (dc_id) REFERENCES data_center(dc_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 CREATE TABLE stakeholder (
     stakeholder_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -41,7 +44,7 @@ CREATE TABLE stakeholder (
     location_id INTEGER NOT NULL,
     CONSTRAINT fk_stakeholder_location
     FOREIGN KEY (location_id) REFERENCES location(location_id) ON DELETE RESTRICT
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE stakeholder_impact (
     dc_id INTEGER NOT NULL,
@@ -53,4 +56,4 @@ CREATE TABLE stakeholder_impact (
     CONSTRAINT fk_si_dc FOREIGN KEY (dc_id) REFERENCES data_center(dc_id) ON DELETE CASCADE,
     CONSTRAINT fk_si_stakeholder
     FOREIGN KEY (stakeholder_id) REFERENCES stakeholder(stakeholder_id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
