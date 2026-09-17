@@ -1,6 +1,6 @@
 # Data Centre Impact DB
 
-A PostgreSQL database for tracking data centres, their operators, and their local impact.
+A MySQL database for tracking data centres, their operators, and their local impact.
 
 The schema links companies and locations to data centres, yearly environmental metrics (energy, water, CO2), and how nearby stakeholders are affected.
 
