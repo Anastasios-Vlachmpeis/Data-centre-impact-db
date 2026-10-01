@@ -1,19 +1,44 @@
 # Data Centre Impact DB
 
+Repository: https://github.com/Anastasios-Vlachmpeis/Data-centre-impact-db
+
 A MySQL database for tracking data centres, their operators, and their local impact.
 
 The schema links companies and locations to data centres, yearly environmental metrics (energy, water, CO2), and how nearby stakeholders are affected.
 
 A reviewer with MySQL installed can recreate the full database from the SQL files in this repo. No database dump is required.
 
-## Repository layout
+## Contributors
+
+Anastasios Vlachmpeis Nikita Kirillov Minseok Choi Matvei Kandalintsev
+
+---
+
+## Week 1: Societal problem
+
+> **TODO:** short description of the problem + link to the week 1 file
+
+- File: 
+
+## Week 2: ERD and normalization
+
+> **TODO:** add the ERD picture and the normalization report (Version 1 to 4). Also add the normal form violations we found in the real data in week 5.
+
+- ERD: 
+- Normalization report: 
+
+## Week 3: Schema definition and constraints
+
+### Repository layout
 
 - `schema.sql` : database, tables, keys, and constraints
 - `seed.sql` : realistic mock data
 - `crud.sql` : insert, update, and delete examples
 - `queries.sql` : queries
+- `real_data.sql` : real-world data (week 5, made by `clean_data.py`)
+- `checks.sql` : data checks after loading the real data (week 5)
 
-## How to run
+### How to run
 
 1. Install MySQL and create a local user
 2. Create the schema, then load the data
@@ -23,13 +48,15 @@ From a terminal, with MySQL on your PATH:
 ```bash
 mysql -u root -p < schema.sql
 mysql -u root -p data_centre_impact < seed.sql
+mysql -u root -p data_centre_impact < real_data.sql
 mysql -u root -p data_centre_impact < crud.sql
 mysql -u root -p data_centre_impact < queries.sql
+mysql -u root -p data_centre_impact < checks.sql
 ```
 
-In MySQL Workbench: open each file with **File → Open SQL Script** and execute it in this order: `schema.sql`, `seed.sql`, `crud.sql`, `queries.sql`.
+In MySQL Workbench: open each file with **File → Open SQL Script** and execute it in this order: `schema.sql`, `seed.sql`, `real_data.sql`, `crud.sql`, `queries.sql`, `checks.sql`.
 
-## Schema
+### Schema
 
 | Table | Role |
 |---|---|
@@ -39,15 +66,79 @@ In MySQL Workbench: open each file with **File → Open SQL Script** and execute
 | `environmental_impact` | Yearly energy, water, and CO2 for a site |
 | `stakeholder` | Person or organisation in a location |
 | `stakeholder_impact` | How a data centre affects a stakeholder |
+| `country` | Country code and name (new in week 5) |
+| `grid_electricity` | Electricity use, CO2 per kWh, and renewables share per country per year (new in week 5) |
 
-## Queries
 
-`queries.sql` has 3 queries:
+### Queries
 
-1. Energy, water, and CO2 totals by city for the latest year
+`queries.sql` has 6 queries. Q1 to Q3 are from week 3 (changed a bit in week 5), Q4 to Q6 are new and use the real data.
+
+1. Number of data centres per city, and energy, water, and CO2 totals for the latest year
 2. Operational sites with high CO2 and high-severity stakeholder impacts
 3. Year-over-year energy change per data centre
+4. Which companies have the most data centres in the Netherlands, and in how many cities (real data)
+5. Reported CO2 compared to how much CO2 the same electricity would give on the Dutch grid (mock data + grid data)
+6. How clean Dutch electricity is compared to the rest of Europe, per year (real data)
 
-## Contributors
+What we changed in week 5:
+- Q1 used a normal JOIN with `environmental_impact`, so all real sites (which have no yearly numbers) were left out and Amsterdam only showed 4 data centres. With a LEFT JOIN it now shows 95, plus a column with how many of them actually have numbers.
+- Q2 had the year fixed to 2024, now it takes the latest year like Q1.
+- Q3 did not change.
 
-Anastasios Vlachmpeis Nikita Kirillov Minseok Choi Matvei Kandalintsev
+`checks.sql` has extra checks we run after loading the real data (duplicate names, missing values, rows without a country).
+
+## Week 4: Stakeholder video
+
+> **TODO:** add the video here (drag the .mp4 into the README editor on github.com, or add a YouTube link)
+
+- Video: 
+
+## Week 5: Real-world data
+
+This week we loaded two real, open datasets into our database to see if our design still works. 
+### Datasets
+
+| | Dataset A | Dataset B |
+|---|---|---|
+| What | List of data centres (name, company, address) | Electricity use and how clean the grid is, per country per year |
+| Source | [ATLAS / Global Data Center Map](https://github.com/Ringmast4r/Global-Data-Center-Map) by Ringmast4r | [Our World in Data energy dataset](https://github.com/owid/energy-data) (data from Ember) |
+| Published | 16-09-2026 (version we used) | 27-04-2026 (version we used) |
+| License | Free to use with credit (attribution license) | CC BY 4.0 |
+| What we used | Dutch rows only: 448 raw -> 397 data centres | Europe 2000-2025: 1,030 rows, 40 countries |
+| Goes into | `company`, `location`, `data_center` | `country`, `grid_electricity` |
+
+The two datasets only overlap on the Netherlands, so neither one is a subset of the other. A tells us where the data centres are, B tells us how much CO2 the electricity they use causes.
+
+### How we loaded it
+
+- `clean_data.py` cleans the raw files in `data/raw/` and writes the clean files to `data/clean/` and the SQL to `real_data.sql`
+- `real_data.sql` runs in one transaction and puts the data into the normalized tables (every company and city only once)
+
+### Data cleaning
+
+- **Missing data:** empty cells and "tbc" in the source. Capacity and status are not in dataset A at all. We store all of these as NULL instead of making up a value.
+- **Dates:** dataset A has no dates at all. Dataset B uses a normal 4-digit year, which matches our `year` column.
+- **Duplicates:** 1 exact duplicate, 4 duplicates after cleaning, and 37 sites that were in the data twice under different names (like "Equinix AM1" and "AM1 Amsterdam IBX Data Center").
+- **Naming:** the same company written in different ways ("Digital Realty" / "Digital Realty Trust"), two address formats, typos in city names ("Amerfoort"), and 3-letter country codes (NLD) while we use 2 letters (NL).
+
+### Schema and constraint changes
+
+Loading the real data into the week 3 schema gave errors, so we changed:
+- `capacity_mw` and `status` can be NULL now (396 rows failed on NOT NULL)
+- `dc_name` is not unique anymore, because many companies call their site "Amsterdam" (64 rows failed)
+- `dc_name` is longer (50 -> 150 characters)
+- new columns `street_address` and `source` (mock or real) in `data_center`
+- new tables `country` and `grid_electricity`
+- `crud.sql` fixed, because it used ids that are now taken by real data
+
+### Normalization
+
+The raw files were not normalized. Addresses were not atomic (1NF), country names were repeated per year (2NF), and company and city were repeated on every row (3NF). After loading, our database is still in 3NF. 
+
+### Limitations and future work (from the week 4 video)
+
+- "Only 4 cities and 10 data centres": fixed, we now have 102 places and 407 data centres
+- "Data is simulated": partly fixed. Locations and companies are real now, but energy, water, CO2 and stakeholder data are still mock.
+- Indexes, a transaction and a view are now added (these were future work in the video)
+- New problem: the real data has no capacity or status, so Q2 and Q3 can still only use the mock data

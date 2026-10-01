@@ -1,3 +1,5 @@
+-- our mock data from week 3 (made up sites, stakeholders and yearly numbers)
+-- the real data is added after this with real_data.sql
 USE data_centre_impact;
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -7,7 +9,12 @@ TRUNCATE TABLE stakeholder;
 TRUNCATE TABLE data_center;
 TRUNCATE TABLE location;
 TRUNCATE TABLE company;
+TRUNCATE TABLE grid_electricity;
+TRUNCATE TABLE country;
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- week 5: location.country is a foreign key now, so NL has to exist first
+INSERT INTO country (country_code, country_name) VALUES ('NL', 'Netherlands');
 
 INSERT INTO company (company_id, company_name) VALUES
     (1, 'Google'),
