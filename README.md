@@ -114,7 +114,6 @@ The two datasets only overlap on the Netherlands, so neither one is a subset of 
 
 - `clean_data.py` cleans the raw files in `data/raw/` and writes the clean files to `data/clean/` and the SQL to `real_data.sql`
 - `real_data.sql` runs in one transaction and puts the data into the normalized tables (every company and city only once)
-- `data/clean/cleaning_log.md` shows how many rows each cleaning step changed
 
 ### Data cleaning
 
