@@ -1,7 +1,6 @@
 USE data_centre_impact;
 
 -- ===== week 3 queries, changed a bit in week 5 for the real data =====
--- results before/after are in docs/week5_real_world_data.md section 6
 
 -- Q1. which cities have the most data centres and the biggest footprint?
 -- week 5: the old version used a normal JOIN with environmental_impact, so
@@ -40,7 +39,7 @@ JOIN environmental_impact e ON e.dc_id = dc.dc_id
 JOIN stakeholder_impact si ON si.dc_id = dc.dc_id
 WHERE e.year = (SELECT MAX(year) FROM environmental_impact)
   AND dc.status = 'operational'
-GROUP BY dc.dc_name, c.company_name, l.city, e.co2_tons
+GROUP BY dc.dc_id, dc.dc_name, c.company_name, l.city, e.co2_tons
 HAVING SUM(si.severity = 'high') >= 1
 ORDER BY e.co2_tons DESC;
 

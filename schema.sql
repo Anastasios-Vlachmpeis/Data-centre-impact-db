@@ -1,6 +1,5 @@
 -- Data Centre Impact DB schema
 -- updated in week 5 for the real data, changes are marked with "week 5:"
--- (see docs/week5_real_world_data.md for why)
 
 -- week 5: drop first so we can run the whole thing again without errors
 DROP DATABASE IF EXISTS data_centre_impact;
@@ -37,6 +36,7 @@ CREATE TABLE data_center (
     -- week 5: new. street + house number, can be empty
     -- (we don't store the postcode because postcode -> city would break 3NF)
     street_address VARCHAR(255) NULL,
+    street_address_key VARCHAR(255) GENERATED ALWAYS AS (IFNULL(street_address, '')) STORED,
     -- week 5: can be NULL now, the real data doesn't have capacity or status
     capacity_mw NUMERIC(8,2) NULL CHECK (capacity_mw > 0),
     status VARCHAR(20) NULL CHECK (status IN ('planned', 'operational', 'decommissioned')),
@@ -45,7 +45,7 @@ CREATE TABLE data_center (
     company_id INT NOT NULL,
     location_id INT NOT NULL,
     -- week 5: instead of unique dc_name, a site is unique by company + place + name + street
-    CONSTRAINT uq_dc_site UNIQUE (company_id, location_id, dc_name, street_address),
+    CONSTRAINT uq_dc_site UNIQUE (company_id, location_id, dc_name, street_address_key),
     CONSTRAINT fk_dc_company FOREIGN KEY (company_id) REFERENCES company(company_id)
     ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_dc_location FOREIGN KEY (location_id) REFERENCES location(location_id)
