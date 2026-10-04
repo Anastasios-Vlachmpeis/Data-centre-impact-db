@@ -108,10 +108,11 @@ What we changed in week 5:
 `checks.sql` has extra checks we run after loading the real data (duplicate names, missing values, rows without a country).
 
 ## Week 4: Stakeholder video
-
-> **TODO:** add the video here (drag the .mp4 into the README editor on github.com, or add a YouTube link)
-
 - Video:
+
+https://github.com/user-attachments/assets/c3191756-f645-4f16-970d-a3bfdec4b48f
+
+
 
 ## Week 5: Real-world data
 
