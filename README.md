@@ -24,16 +24,27 @@ Anastasios Vlachmpeis, Nikita Kirillov, Minseok Choi, Matvei Kandalintsev
 
 ## Week 1: Societal problem
 
-> **TODO:** short description of the problem + link to the week 1 file
+Our topic is the local cost of the AI data centre boom, based on the MIT Technology Review article "Data centers are amazing. Everyone hates them." (Mat Honan, 14-01-2026). Data centres bring benefits that are global (AI, cloud, economic growth), but the costs are local: electricity and water use, noise, and grid problems, while residents have little say.
 
-- File:
+- File: [Week 1 – Societal problem (PDF)](docs/week1/week1_societal_problem.pdf)
 
 ## Week 2: ERD and normalization
 
-> **TODO:** add the ERD picture and the normalization report (Version 1 to 4). Also add the normal form violations we found in the real data in week 5.
-
 - ERD:
-- Normalization report:
+- <img width="911" height="510" alt="image" src="https://github.com/user-attachments/assets/9bfba3ab-42ac-4ec0-94e8-84eccb5f973e" />
+
+- Normalization report: [Week 2 – ERD and normalization (PDF)](docs/week2/week2_erd_normalization.pdf)
+
+
+### Week 5 update: normal form violations in the real data
+
+When we loaded the real data in week 5, the raw files had the same problems we fixed in week 2:
+- 1NF: in dataset A the address was one cell with street, postcode, city and country together. We split it into `street_address` and `location`.
+- 2NF: in dataset B the key is (country code, year), but the country name only depends on the country code, so it was repeated every year. We made a separate `country` table.
+- 3NF: in dataset A the company and city were repeated on every row, and city -> country is a transitive dependency. Same fix as in week 2: `company`, `location` and now also `country` tables.
+- We did not store the postcode, because postcode -> city would break 3NF again.
+
+After loading, our database is still in 3NF. The ERD above is from week 2; in week 5 we added the `country` and `grid_electricity` tables.
 
 ## Week 3: Schema definition and constraints
 
