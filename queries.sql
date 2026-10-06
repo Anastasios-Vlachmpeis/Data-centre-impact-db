@@ -43,7 +43,9 @@ GROUP BY dc.dc_id, dc.dc_name, c.company_name, l.city, e.co2_tons
 HAVING SUM(si.severity = 'high') >= 1
 ORDER BY e.co2_tons DESC;
 
--- Q3. how much energy use changes every year per data centre (not changed)
+-- Q3 (Created by Nikita Kirillov)
+-- Question: how much does energy use change every year for each data centre?
+-- Why: it shows which sites are using more or less electricity over time. the real sites have no yearly energy numbers, so this still only uses the mock data. the query itself was not changed in week 5.
 SELECT dc.dc_name,
        e.year,
        e.energy_mwh,
@@ -59,8 +61,9 @@ ORDER BY dc.dc_name, e.year;
 
 -- ===== new queries in week 5 that use the real data =====
 
--- Q4. which companies have the most data centres in NL and in how many cities?
--- (dataset A)
+-- Q4 (Created by Nikita Kirillov)
+-- Question: which companies have the most data centres in the Netherlands, and in how many cities?
+-- Why: dataset A is the real list of Dutch sites. this shows who owns the most of them, and whether those sites are spread over many cities or concentrated in a few.
 SELECT c.company_name,
        COUNT(*)                    AS sites,
        COUNT(DISTINCT dc.location_id) AS cities,
