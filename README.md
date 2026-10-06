@@ -166,3 +166,13 @@ The raw files were not normalized. Addresses were not atomic (1NF), country name
 
 ### Publication
 Link to our published sql dump on Zendo: https://zenodo.org/records/23189532
+
+## Use of AI
+
+We used an AI assistant during the project, mainly in week 5 and for the final submission:
+- finding open datasets and checking their licences
+- writing the data cleaning script (`etl/clean_data.py`) and the SQL that loads the real data
+- improving some of the queries/ syntax checking on sql
+- brainstorming, and drafting and checking the README text
+
+All AI output was reviewed by us. We ran every queries ourselves in MySQL, checked the results and made decisions ourselves.
