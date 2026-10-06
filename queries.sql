@@ -73,9 +73,9 @@ GROUP BY c.company_name
 ORDER BY sites DESC
 LIMIT 10;
 
--- Q5. reported CO2 compared to how much CO2 the same electricity would give
--- on the normal dutch grid (mock numbers + dataset B). if reported is a lot
--- lower, the company must be buying green energy, which people can ask about.
+-- Q5 (Created by MindaProgrammar)
+-- Question: how much CO2 do the data centres report, compared to what the same amount of electricity would give on the dutch grid?
+-- Why: companies report low CO2 because they say they use green energy. this shows how big the difference is, so people can question those numbers.
 -- tonnes = MWh * g/kWh / 1000
 SELECT dc.dc_name,
        e.year,
@@ -92,8 +92,10 @@ LEFT JOIN grid_electricity g ON g.country_code = l.country AND g.year = e.year
 WHERE e.year = (SELECT MAX(year) FROM environmental_impact)
 ORDER BY grid_based_co2_t DESC;
 
--- Q6. how clean is dutch electricity compared to the rest of europe, per year?
--- (dataset B) rank 1 = cleanest country
+-- Q6 (Created by MinDaProgrammar)
+-- Question: how clean is dutch electricity compared to other countries in europe?
+-- Why: more data centres means more electricity use. if the dutch grid is dirtier than most of europe, building more of them here causes more CO2.
+-- rank 1 = cleanest country
 SELECT year, carbon_intensity_g_per_kwh, renewables_share_pct, rank_in_europe, countries_ranked
 FROM (
     SELECT country_code,
