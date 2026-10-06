@@ -163,3 +163,6 @@ The raw files were not normalized. Addresses were not atomic (1NF), country name
 - "Data is simulated": partly fixed. Locations and companies are real now, but energy, water, CO2 and stakeholder data are still mock.
 - Indexes, a transaction and a view are now added (these were future work in the video)
 - New problem: the real data has no capacity or status, so Q2 and Q3 can still only use the mock data
+
+### Publication
+Link to our published sql dump on Zendo: https://zenodo.org/records/23189532
