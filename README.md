@@ -14,7 +14,7 @@ The database keeps track of:
 - yearly environmental numbers per site (energy in MWh, water in cubic metres, CO2 in tons)
 - stakeholders near a site (residents, municipalities, NGOs, utilities, businesses) and how each data centre affects them, including how serious the issue was and what the response looked like (complaint, protest, legal challenge, etc.)
 
-The seed data uses real company names (Google, Microsoft, Equinix, Digital Realty) and real Dutch cities (Amsterdam, Rotterdam, Groningen, Eindhoven) just because it made the numbers easier to reason about, but the actual sites, capacities, and impact records are all made up. Also fair warning, a few of the "local resident" stakeholders in `seed.sql` are just our first names, we got lazy filling in test data.
+The seed data uses real company names (Google, Microsoft, Equinix, Digital Realty) and real Dutch cities (Amsterdam, Rotterdam, Groningen, Eindhoven) just because it made the numbers easier to reason about, but the actual sites, capacities, and impact records are all made up. Also fair warning, a few of the "local resident" stakeholders in `seed.sql` are just our first names, we got lazy filling in test data --> Now changed into student1, student2, student3, student4 before publishing.
 
 ## Contributors
 
