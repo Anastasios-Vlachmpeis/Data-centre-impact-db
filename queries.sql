@@ -112,3 +112,45 @@ FROM (
 ) ranked
 WHERE country_code = 'NL' AND year >= 2015
 ORDER BY year;
+
+-- Q7 (Created by Anastasios Vlachmpeis)
+-- Question: is dutch electricity demand growing, and does generation keep up?
+-- Why: data centres use a lot of electricity, so if demand grows faster than it's generation, 
+-- homes and other users get less of the remaining electricity.
+
+SELECT year,
+       electricity_demand_twh,
+       electricity_generation_twh,
+       ROUND(electricity_demand_twh - electricity_generation_twh, 3) AS demand_gap_twh,
+       LAG(electricity_demand_twh) OVER (ORDER BY year) AS prev_demand_twh,
+       ROUND( 100.0 * ( electricity_demand_twh - LAG(electricity_demand_twh) OVER (ORDER BY year)) / NULLIF(LAG(electricity_demand_twh) OVER (ORDER BY year), 0), 1)
+       AS demand_pct_change,
+       carbon_intensity_g_per_kwh,
+       renewables_share_pct
+FROM grid_electricity
+WHERE country_code = 'NL'
+  AND year >= 2015
+  AND electricity_demand_twh IS NOT NULL
+ORDER BY year;
+
+
+-- Q8 (Created by Anastasios Vlachmpeis)
+-- Question: for companies with several dutch sites, how many of those sites are in the same city?
+-- Why: If a company puts most of its sites in one city, that city takes more of the extra electricity use.
+
+SELECT c.company_name,
+       SUM(city_counts.sites_in_city) AS sites,
+       COUNT(*) AS cities,
+       MAX(city_counts.sites_in_city) AS sites_in_biggest_city,
+       ROUND(100.0 * MAX(city_counts.sites_in_city) / SUM(city_counts.sites_in_city), 1) AS pct_in_biggest_city
+FROM (
+    SELECT company_id, location_id, COUNT(*) AS sites_in_city
+    FROM data_center
+    WHERE source = 'atlas'
+    GROUP BY company_id, location_id
+) city_counts
+JOIN company c ON c.company_id = city_counts.company_id
+GROUP BY c.company_name
+HAVING SUM(city_counts.sites_in_city) >= 3
+ORDER BY pct_in_biggest_city DESC, sites DESC
+LIMIT 10;
