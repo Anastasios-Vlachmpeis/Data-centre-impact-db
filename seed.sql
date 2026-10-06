@@ -69,10 +69,10 @@ INSERT INTO environmental_impact (dc_id, year, energy_mwh, water_m3, co2_tons) V
     (9, 2025, 102000,  25500,  8700);
 
 INSERT INTO stakeholder (stakeholder_id, stakeholder_name, stakeholder_type, location_id) VALUES
-    (1,  'Minseok',                   'local_resident',    1),
-    (2,  'Nikita',                    'local_resident',    1),
-    (3,  'Tasos',                     'local_resident',    1),
-    (4,  'Matvei',                    'local_resident',    2),
+    (1,  'Student1',                   'local_resident',    1),
+    (2,  'Student2',                    'local_resident',    1),
+    (3,  'Student3',                     'local_resident',    1),
+    (4,  'Student4',                    'local_resident',    2),
     (5,  'Municipality Amsterdam',    'municipality',      1),
     (6,  'Municipality Rotterdam',    'municipality',      2),
     (7,  'Green NGO Rotterdam',       'environmental_ngo', 2),
