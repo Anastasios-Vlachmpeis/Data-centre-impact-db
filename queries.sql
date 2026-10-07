@@ -154,3 +154,37 @@ GROUP BY c.company_name
 HAVING SUM(city_counts.sites_in_city) >= 3
 ORDER BY pct_in_biggest_city DESC, sites DESC
 LIMIT 10;
+
+-- Q9 (Created by Matvei Kandalintsev)
+-- Question: which cities had the strongest pushback from stakeholders (protests or legal challenges)?
+-- Why: this is the local-cost side of our problem, not just co2/energy numbers. a city with few
+-- data centres but a lot of protests says more about local impact than the environmental totals do.
+SELECT l.city,
+       COUNT(*) AS impact_records,
+       SUM(si.response = 'protest') AS protests,
+       SUM(si.response = 'legal_challenge') AS legal_challenges,
+       SUM(si.severity = 'high') AS high_severity_cases
+FROM stakeholder_impact si
+JOIN data_center dc ON dc.dc_id = si.dc_id
+JOIN location l ON l.location_id = dc.location_id
+GROUP BY l.city
+HAVING SUM(si.response IN ('protest', 'legal_challenge')) >= 1
+ORDER BY legal_challenges DESC, protests DESC;
+
+-- Q10 (Created by Matvei Kandalintsev)
+-- Question: which companies use the most water per MWh at their operational sites?
+-- Why: water use is one of the local complaints in our societal problem, and energy alone doesn't
+-- show that, two companies can use the same electricity but very different amounts of water.
+SELECT c.company_name,
+       COUNT(DISTINCT dc.dc_id) AS sites_with_data,
+       SUM(e.water_m3) AS total_water_m3,
+       SUM(e.energy_mwh) AS total_energy_mwh,
+       ROUND(SUM(e.water_m3) / SUM(e.energy_mwh), 2) AS water_m3_per_mwh
+FROM data_center dc
+JOIN company c ON c.company_id = dc.company_id
+JOIN environmental_impact e ON e.dc_id = dc.dc_id
+WHERE dc.status = 'operational'
+  AND e.year = (SELECT MAX(year) FROM environmental_impact)
+GROUP BY c.company_name
+HAVING SUM(e.energy_mwh) > 0
+ORDER BY water_m3_per_mwh DESC;
