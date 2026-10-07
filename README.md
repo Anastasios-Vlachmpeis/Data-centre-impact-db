@@ -167,6 +167,16 @@ The raw files were not normalized. Addresses were not atomic (1NF), country name
 ### Publication
 Link to our published sql dump on Zendo: https://zenodo.org/records/23189532
 
+## Week 6: small fixes
+
+Went back through the project to check everything still holds up, found and fixed a few small issues:
+
+- `queries.sql` Q5 divided by `energy_mwh * carbon_intensity_g_per_kwh`, which would have been a division by zero if either one was ever 0. Wrapped it in `NULLIF` so it just gives NULL for that row instead.
+- `real_data.sql` step 4 (loading `data_center` from the staging table) used plain JOINs to look up each company/city id. If a company or city somehow didn't make it into step 3, that data centre would just disappear with no warning. Added a check right after the insert that compares the staged row count to how many rows actually got inserted.
+- `grid_electricity.year` allowed 1900-2100 while `environmental_impact.year` only allowed 2000-2100, for no real reason. Made them match since neither dataset goes back before 2000 anyway.
+
+No data changed, `real_data.sql` and the clean CSVs still match what `clean_data.py` produces.
+
 ## Use of AI
 
 We used an AI assistant during the project, mainly in week 5 and for the final submission:
