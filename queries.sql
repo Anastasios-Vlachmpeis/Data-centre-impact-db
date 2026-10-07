@@ -86,8 +86,10 @@ SELECT dc.dc_name,
        e.co2_tons                                              AS reported_co2_t,
        g.carbon_intensity_g_per_kwh                            AS grid_g_per_kwh,
        ROUND(e.energy_mwh * g.carbon_intensity_g_per_kwh / 1000, 0) AS grid_based_co2_t,
+       -- NULLIF here because a 0 carbon_intensity or 0 energy_mwh would
+       -- otherwise make this a division by zero
        ROUND(100.0 * e.co2_tons
-             / (e.energy_mwh * g.carbon_intensity_g_per_kwh / 1000), 1) AS reported_pct_of_grid
+             / NULLIF(e.energy_mwh * g.carbon_intensity_g_per_kwh / 1000, 0), 1) AS reported_pct_of_grid
 FROM environmental_impact e
 JOIN data_center dc ON dc.dc_id = e.dc_id
 JOIN location l ON l.location_id = dc.location_id
