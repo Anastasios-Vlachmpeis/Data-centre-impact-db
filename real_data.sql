@@ -481,6 +481,15 @@ FROM stg_datacenter s
 JOIN company c  ON c.company_name = s.company_name
 JOIN location l ON l.city = s.city AND l.country = s.country;
 
+-- the JOINs above drop a staged row without telling you if its company or
+-- city somehow didn't make it into step 3, so check that here instead of
+-- silently losing rows
+SELECT CASE WHEN (SELECT COUNT(*) FROM stg_datacenter) = ROW_COUNT()
+            THEN 'ok, every staged row was inserted'
+            ELSE CONCAT('PROBLEM: staged ', (SELECT COUNT(*) FROM stg_datacenter),
+                        ' rows but only inserted ', ROW_COUNT())
+       END AS data_center_insert_check;
+
 DROP TEMPORARY TABLE stg_datacenter;
 
 -- 5. electricity grid per country per year (dataset B)
