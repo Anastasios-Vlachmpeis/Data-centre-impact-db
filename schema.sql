@@ -68,7 +68,8 @@ CREATE TABLE environmental_impact (
 -- week 5: new table for dataset B, one row per country per year
 CREATE TABLE grid_electricity (
     country_code CHAR(2) NOT NULL,
-    year SMALLINT NOT NULL CHECK (year BETWEEN 1900 AND 2100),
+    -- same range as environmental_impact.year, our grid data doesn't go back further than 2000 anyway
+    year SMALLINT NOT NULL CHECK (year BETWEEN 2000 AND 2100),
     electricity_demand_twh NUMERIC(10,3) NULL CHECK (electricity_demand_twh >= 0),
     electricity_generation_twh NUMERIC(10,3) NULL CHECK (electricity_generation_twh >= 0),
     carbon_intensity_g_per_kwh NUMERIC(8,3) NULL CHECK (carbon_intensity_g_per_kwh >= 0),
