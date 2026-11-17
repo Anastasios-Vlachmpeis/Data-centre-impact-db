@@ -1,7 +1,5 @@
 # Data Centre Impact DB
 
-Repository: https://github.com/Anastasios-Vlachmpeis/Data-centre-impact-db
-
 A MySQL database for tracking data centres, their operators, and their local impact. We built this for a database design course, modelling data centres, the companies that run them, and the effect they have on the places and people around them (energy use, water use, emissions, and local pushback from residents or councils).
 
 We picked this topic because most example databases online are the same old library or shop schema, and we wanted something with a bit more real-world mess to it.
